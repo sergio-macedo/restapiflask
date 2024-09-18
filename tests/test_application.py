@@ -40,3 +40,17 @@ class TestApplication():
         response = client.post('/user', json=invalid_user)
         assert response.status_code == 400
         assert b"invalid" in response.data
+    
+    def test get user(self, client, valid_user, invalid_user):
+        response = client.get('/user/%s' % valid_user ["cpf"])
+        assert response.status_code == 200
+        assert response.json[0]["first_name"] == "Mateus"
+        assert response.json[0]["last_name"] == "Muller"
+        assert response.json[0]["cpf"] == "641.396.500-28"
+        assert response.json[0]["email"] == "contato@mateusmuller.me"
+        birth_date = response.json[0]["birth_date"]["$date"]
+        assert response.json[0]["birth_date"] == "1996-09-10T00:00:00Z"
+
+        response = client.get('/user/%s' % invalid_user ["cpf"])
+        response.status_code == 400
+        assert b"user does not exist in database" in response.data
