@@ -1,20 +1,13 @@
-from flask import Flask 
+
 import json
-from flask_restful import Resource, Api
-from flask_mongoengine import MongoEngine
+from flask_restful import Resource
+from .model import UserModel
 from MongoEngine import NotUniqueError
 import re
 
 
-app = Flask(__name__)
 
-app.config['MONGODB_SETTINGS'] = {
-    'db': 'users',
-    'port': 27017,
-    'host': 'mongodb',
-    'username': 'admin',  
-    'password': 'admin'
-}
+
 
 _user_parser = reqparse.RequestParser()
 _user_parser.add_argument('first_name',
@@ -43,21 +36,14 @@ _user_parser.add_argument('birth_date',
                           help="This field cannot be blank."
                           )
 
-api = Api(app)
-db = MongoEngine(app)
 
 
 
 
 
-class UserModel(db.Document):
-    cpf = db.StringField(required=True, unique=True)
-    email = db.EmailField(required=True)
-    first_name = db.StringField(required=True)
-    last_name = db.StringField(required=True)
-    birth_date = db.DateTimeField(required=True)
 
-class Users(Resource)
+
+class Users(Resource):
     def get (self)
         return jsonify(UserModel.objects())
 
@@ -95,7 +81,12 @@ class User(Resource):
 
 
     def get(self, cpf):
-        return jsonify(UserModel.objects(cpf=cpf))
+        response = UserModel.objects(cpf=cpf) 
+        if response:
+            return jsonify(response)
+        return {"message": "user does not exist in database"} , 400
+
+
 
     def post(self):
         data = _user_parser.parse_args()
@@ -109,8 +100,4 @@ class User(Resource):
             return {"message": "CPF already existis in database"} , 400
 
 
-api.add_resource(Users, '/users')
-api.add_resource(User, '/user', '/user/<string:cpf>')
 
-if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
