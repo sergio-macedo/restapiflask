@@ -6,10 +6,7 @@ from MongoEngine import NotUniqueError
 import re
 
 
-
-
-
-_user_parser = reqparse.RequestParser()
+_user_parser = ReqParse.RequestParser()
 _user_parser.add_argument('first_name',
                           type=str,
                           required=True,
@@ -37,14 +34,8 @@ _user_parser.add_argument('birth_date',
                           )
 
 
-
-
-
-
-
-
 class Users(Resource):
-    def get (self):
+    def get(self):
         return jsonify(UserModel.objects())
 
 
@@ -79,25 +70,19 @@ class User(Resource):
 
         return True
 
-
     def get(self, cpf):
-        response = UserModel.objects(cpf=cpf) 
+        response = UserModel.objects(cpf=cpf)
         if response:
             return jsonify(response)
-        return {"message": "user does not exist in database"} , 400
-
-
+        return {"message": "user does not exist in database"}, 400
 
     def post(self):
         data = _user_parser.parse_args()
         if not self.validate_cpf(data["cpf"]):
             return {"message": "CPF is invalid"}, 400
 
-        try:    
+        try:
             response = UserModel(**data).save()
-            return {"message":"user %s successfully created", % response.id} 
+            return {"message": "user %s successfully created" % response.id}
         except NotUniqueError:
-            return {"message": "CPF already existis in database"} , 400
-
-
-
+            return {"message": "CPF already existis in database"}, 400

@@ -1,4 +1,5 @@
 from application import create_app
+import os
 
 
 if os.getenv('FLASK_ENV') == "development":
