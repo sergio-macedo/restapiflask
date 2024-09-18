@@ -57,6 +57,10 @@ class UserModel(db.Document):
     last_name = db.StringField(required=True)
     birth_date = db.DateTimeField(required=True)
 
+class Users(Resource)
+    def get (self)
+        return jsonify(UserModel.objects())
+
 
 class User(Resource):
 
@@ -90,6 +94,9 @@ class User(Resource):
         return True
 
 
+    def get(self, cpf):
+        return jsonify(UserModel.objects(cpf=cpf))
+
     def post(self):
         data = _user_parser.parse_args()
         if not self.validate_cpf(data["cpf"]):
@@ -100,8 +107,7 @@ class User(Resource):
             return {"message":"user %s successfully created", %response.id } 
         except NotUniqueError:
             return {"message": "CPF already existis in database"} , 400
-    def get(self, cpf):
-        return("message" "CPF")
+
 
 api.add_resource(Users, '/users')
 api.add_resource(User, '/user', '/user/<string:cpf>')
