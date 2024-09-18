@@ -44,7 +44,7 @@ _user_parser.add_argument('birth_date',
 
 
 class Users(Resource):
-    def get (self)
+    def get (self):
         return jsonify(UserModel.objects())
 
 
@@ -95,7 +95,7 @@ class User(Resource):
 
         try:    
             response = UserModel(**data).save()
-            return {"message":"user %s successfully created", %response.id } 
+            return {"message":"user %s successfully created", % response.id} 
         except NotUniqueError:
             return {"message": "CPF already existis in database"} , 400
 
