@@ -1,4 +1,4 @@
-APP = restapi
+APP = restapi-sergio
 
 test: 
 	@flake8 . --exclude .venv
