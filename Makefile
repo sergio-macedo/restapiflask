@@ -11,5 +11,5 @@ compose:
 heroku:
 
 	@heroku container:login
-	@heroku container:push -a restapi web
-	@heroku container:release -a restapi web
+	@heroku container:push -a $(APP) web
+	@heroku container:release -a $(APP) web
