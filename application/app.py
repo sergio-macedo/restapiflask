@@ -94,7 +94,6 @@ class User(Resource):
         response = UserModel.obejcts(cpf=data["cpf"])
         if response:
             response.update(**data)
-            return {"message": "User updated" }, 200
-       
+            return {"message": "User updated"}, 200
         else:
             return {"message": "User does not exist in database!"}, 400
