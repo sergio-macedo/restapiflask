@@ -1,0 +1,24 @@
+name: Deploy restapiflask
+
+on:
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+         flake8 pytest
+
+      - name: Run tests
+      - run: make test
+
+       
+
+
